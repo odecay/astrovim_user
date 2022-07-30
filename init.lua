@@ -93,6 +93,42 @@ local config = {
       --     require("lsp_signature").setup()
       --   end,
       -- },
+      --
+      {
+        "simrat39/rust-tools.nvim",
+        after = { "nvim-lspconfig", "nvim-lsp-installer" },
+        -- Is configured via the server_registration_override installed below!
+        config = function()
+
+          require("rust-tools").setup{
+            autoSetHints = true,
+            server = {
+              cargo = {
+                loadOutDirsFromCheck = true,
+              },
+              checkOnSave = {
+                command = "clippy",
+              },
+              experimental = {
+                procAttrMacros = true,
+              },
+              workspace = {
+                symbol = {
+                  search = {
+                    kind = "all_symbols"
+                  }
+                }
+              },
+            },
+            tools = {
+              inlay_hints = {
+                parameter_hints_prefix = "  ",
+                other_hints_prefix = "  ",
+              },
+            },
+          }
+        end,
+      },
     },
     -- All other entries override the setup() call for default plugins
     ["null-ls"] = function(config)
@@ -172,6 +208,7 @@ local config = {
 
   -- Extend LSP configuration
   lsp = {
+    skip_setup = { "rust_analyzer" }, -- will be set up by rust-tools
     -- enable servers that you already have installed without lsp-installer
     servers = {
       -- "pyright"
